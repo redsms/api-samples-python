@@ -1,0 +1,22 @@
+# virtualenv
+.env
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+# Distribution / packaging
+*.egg
+*.egg-info/
+.eggs
+.installed.cfg
+bin/
+build/
+develop-eggs/
+dist/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+# config
+samples/config.json
