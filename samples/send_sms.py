@@ -6,41 +6,46 @@ import time
 
 import requests
 
-import redsms
+from common import result, settings
 
 def main():
 
-    with open('config.json', 'r') as f:
-        config = json.load(f)
-
-    api = redsms.API(**config)
-    test_number = '+79000000000'
+    config, api = settings()
+    test_number = config['phone_number']
 
     body = {
         'text': 'Hello, world!',
         'to': test_number,
+        'from': config['default_sender'],
+        'route': 'sms',
     }
 
     response = api.post('message', data=body)
 
-    for message in response.json()['items']:
+    body = result(response)
+    if not body.get('items'):
+        raise SystemExit(f"No accepted messages: {body.get('errors', [])}")
+    messages = [message for message in body['items'] if message.get('uuid')]
+    if not messages:
+        raise SystemExit('Response contained no message UUID')
+    for message in messages:
         print('{}: {}'.format(message['to'], message['uuid']))
         last_msg_uuid = message['uuid']
 
     print('Getting message info...')
 
     response = api.get('message/{}'.format(last_msg_uuid))
-    print(json.dumps(response.json(), indent=2))
+    print(json.dumps(result(response), indent=2))
     print('Waiting 10 seconds...')
     time.sleep(10)
 
     print('Getting message info again...')
 
     response = api.get('message/{}'.format(last_msg_uuid))
-    print(json.dumps(response.json(), indent=2))
+    print(json.dumps(result(response), indent=2))
 
 if __name__ == '__main__':
     try:
         main()
-    except requests.exceptions.ConnectionError as err:
-        print('Cannot connect to the server.')
+    except requests.RequestException as err:
+        raise SystemExit(str(err))

@@ -3,20 +3,18 @@
 
 import json
 import requests
-import redsms
+from common import result, settings
 
 def main():
 
-    with open('config.json', 'r') as f:
-        config = json.load(f)
-
-    api = redsms.API(**config)
-    test_number = '+79000000000'
+    config, api = settings()
+    test_number = config['phone_number']
 
     body = {
         'to': test_number,
         'text': 'This is a test for viber!',
-        'from': 'NoName',
+        'from': config['viber_sender'],
+        'sms.from': config['default_sender'],
         'route': 'viber,sms',
         'sms.text': 'This is a test for sms!',
         'viber.btnText': 'test_button',
@@ -25,10 +23,10 @@ def main():
     }
 
     response = api.post('message', data=body)
-    print(json.dumps(response.json(), indent=2))
+    print(json.dumps(result(response), indent=2))
 
 if __name__ == '__main__':
     try:
         main()
-    except requests.exceptions.ConnectionError as err:
-        print('Cannot connect to the server.')
+    except requests.RequestException as err:
+        raise SystemExit(str(err))
