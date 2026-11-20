@@ -3,21 +3,18 @@
 
 import json
 import requests
-import redsms
+from common import result, settings
 
 def main():
 
-    with open('config.json', 'r') as f:
-        config = json.load(f)
-
-    api = redsms.API(**config)
+    config, api = settings()
 
     info = api.get('sender-name')
-    print(json.dumps(info.json(), indent=2))
+    print(json.dumps(result(info), indent=2))
 
 
 if __name__ == '__main__':
     try:
         main()
-    except requests.exceptions.ConnectionError as err:
-        print('Cannot connect to the server.')
+    except requests.RequestException as err:
+        raise SystemExit(str(err))

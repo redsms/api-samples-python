@@ -78,4 +78,6 @@ class API(object):
             'sig': sig,
         })
 
-        return method(_url, headers=params, data=string_params, files=files)
+        if method == self.session.get:
+            return method(_url, headers=params, params=string_params, timeout=30)
+        return method(_url, headers=params, data=string_params, files=files, timeout=30)

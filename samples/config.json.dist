@@ -1,6 +1,7 @@
 {
-    "phone_number": "+79001112233",
-    "login": "username",
-    "api_key": "Xf69YBeitJbPd15OwKlnkMHcZroRmCIV",
-    "default_sender": "REDSMS.RU"
+    "phone_number": "YOUR_PHONE",
+    "login": "YOUR_LOGIN",
+    "api_key": "YOUR_API_KEY",
+    "default_sender": "YOUR_SMS_SENDER",
+    "viber_sender": "YOUR_VIBER_SENDER"
 }

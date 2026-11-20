@@ -1,51 +1,26 @@
-Simple API wrapper for redsms_ service
---------------------------------------
+RED SMS · Python
+================
 
-This is a python library that wraps RedSms API.
+Требуется Python 3.8 или новее. Из корня репозитория::
 
-Supported version
-=================
+    python3 -m venv .venv
+    .venv/bin/python -m pip install .
+    cp samples/config.json.dist samples/config.json
 
-Both Python 2 and 3 are supported.
+Для Windows используйте python из .venv/Scripts. В config.json укажите логин,
+API-ключ, свой номер и зарегистрированные имена отправителей.
 
-Installation
-============
+Проверка доступа и списка отправителей::
 
-Use ``virtualenv`` to install ``redsms`` package.
+    .venv/bin/python samples/get_info.py
+    .venv/bin/python samples/get_sender_name_list.py
 
-.. highlight: sh
+Отправка одного платного SMS и проверка статуса::
 
-::
+    .venv/bin/python samples/send_sms.py
 
-   virtualenv --python <path/to/the/preffered/version> .env
-   source .env/bin/activate
-   python setup.py install
+Скрипты send_viber.py и resend_sms_viber.py требуют подключенного канала Viber.
+send_dispatch.py создаёт рассылку. Запускайте эти примеры с разрешёнными
+для аккаунта именами и тестовым номером.
 
-Configuration
-=============
-
-To use the API you need to register at https://cp.redsms.ru and specify API key in settings. Copy sample config file. And fill out the necessary information.
-
-::
-
-   cp samples/sample.config.json samples/config.json
-
-Example Usage
-=============
-
-See example scripts in the ``samples`` directory.
-
-::
-
-   source .env/bin/activate
-   cd samples
-   python get_info.py
-
-**NB:** The regular price will be charged from your account.
-
-Call for contributions
-======================
-
-This is an open source project. Your ideas to improve the library are welcome.
-
-.. _redsms: https://cp.redsms.ru/
+Документация: https://docs.redsms.ru/http/
