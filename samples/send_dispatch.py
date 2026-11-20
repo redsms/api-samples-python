@@ -9,22 +9,13 @@ def main():
 
     config, api = settings()
 
-    test_number = config['phone_number']
-
-    text_viber = 'It is test for viber!'
-    text_sms = 'It is test for sms!'
-    dispatch_name = 'It is a test dispatch api'
-
     body = {
-        'from': config['viber_sender'],
-        'name': dispatch_name,
-        'route': 'viber,sms',
-        'sms.from': config['default_sender'],
-        'sms.text': text_sms,
-        'sms.validity': api.VALIDITY_PERIOD_MAX,
-        'text': text_viber,
-        'to': test_number,
-        'validity': api.VALIDITY_PERIOD_MIN,
+        'route': 'sms',
+        'from': config['default_sender'],
+        'to': config['phone_number'],
+        'name': 'Тестовая SMS-рассылка',
+        'text': 'Тестовое сообщение от redsms.ru',
+        'validity': api.VALIDITY_PERIOD_MAX,
     }
 
     info = api.post('dispatch', data=body)
