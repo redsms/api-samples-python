@@ -19,9 +19,7 @@ API-ключ, свой номер и зарегистрированные име
 
     .venv/bin/python samples/send_sms.py
 
-Скрипты send_viber.py и resend_sms_viber.py требуют подключенного канала Viber.
-send_dispatch.py создаёт рассылку. Запускайте эти примеры с разрешёнными
-для аккаунта именами и тестовым номером.
+send_dispatch.py создаёт SMS-рассылку с указанными в конфигурации именем и номером.
 
 Документация: https://docs.redsms.ru/http/
 

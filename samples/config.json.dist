@@ -2,6 +2,5 @@
     "phone_number": "YOUR_PHONE",
     "login": "YOUR_LOGIN",
     "api_key": "YOUR_API_KEY",
-    "default_sender": "YOUR_SMS_SENDER",
-    "viber_sender": "YOUR_VIBER_SENDER"
+    "default_sender": "YOUR_SMS_SENDER"
 }
