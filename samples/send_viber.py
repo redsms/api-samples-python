@@ -30,7 +30,7 @@ def main():
         sys.exit(1)
 
     body = {
-        'text': 'Hello, Viber!',
+        'text': 'Тестовое сообщение от redsms.ru',
         'to': test_number,
         'route': 'viber',
         'from': config['viber_sender'],

@@ -12,11 +12,11 @@ def main():
 
     body = {
         'to': test_number,
-        'text': 'This is a test for viber!',
+        'text': 'Тестовое сообщение от redsms.ru',
         'from': config['viber_sender'],
         'sms.from': config['default_sender'],
         'route': 'viber,sms',
-        'sms.text': 'This is a test for sms!',
+        'sms.text': 'Тестовое сообщение от redsms.ru',
         'viber.btnText': 'test_button',
         'viber.btnUrl': 'https://cp.redsms.ru/reports/details',
         'viber.validity': 10,

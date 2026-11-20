@@ -3,6 +3,7 @@
 
 import json
 import time
+import sys
 
 import requests
 
@@ -14,7 +15,7 @@ def main():
     test_number = config['phone_number']
 
     body = {
-        'text': 'Hello, world!',
+        'text': 'Тестовое сообщение от redsms.ru',
         'to': test_number,
         'from': config['default_sender'],
         'route': 'sms',
@@ -23,26 +24,40 @@ def main():
     response = api.post('message', data=body)
 
     body = result(response)
-    if not body.get('items'):
-        raise SystemExit(f"No accepted messages: {body.get('errors', [])}")
-    messages = [message for message in body['items'] if message.get('uuid')]
-    if not messages:
-        raise SystemExit('Response contained no message UUID')
-    for message in messages:
-        print('{}: {}'.format(message['to'], message['uuid']))
-        last_msg_uuid = message['uuid']
+    errors = body.get('errors', [])
+    if errors:
+        print(json.dumps(errors, ensure_ascii=False), file=sys.stderr)
+    pending = set()
+    for item in body.get('items', []):
+        if not item.get('uuid'):
+            raise SystemExit('Missing message UUID')
+        print(f"{item['to']}: {item['uuid']}")
+        pending.add(item['uuid'])
+    if not pending:
+        raise SystemExit('No accepted messages')
 
-    print('Getting message info...')
+    failed = bool(errors)
+    for attempt in range(2):
+        if not pending:
+            break
+        if attempt:
+            time.sleep(10)
+        for uuid in sorted(pending):
+            response = api.get(f'message/{uuid}', data={'fields': 'uuid,status,errCode'})
+            item = result(response).get('item', {})
+            status = item.get('status')
+            if not status:
+                raise SystemExit(f'{uuid}: missing status')
+            print(f"{uuid}: {status}, errCode={item.get('errCode')}")
+            if status not in ('created', 'moderation', 'progress'):
+                pending.remove(uuid)
+                if status != 'delivered':
+                    failed = True
+    if pending:
+        print('Check these UUIDs again later:', ', '.join(sorted(pending)))
+    if failed:
+        raise SystemExit(1)
 
-    response = api.get('message/{}'.format(last_msg_uuid))
-    print(json.dumps(result(response), indent=2))
-    print('Waiting 10 seconds...')
-    time.sleep(10)
-
-    print('Getting message info again...')
-
-    response = api.get('message/{}'.format(last_msg_uuid))
-    print(json.dumps(result(response), indent=2))
 
 if __name__ == '__main__':
     try:

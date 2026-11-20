@@ -11,8 +11,8 @@ def main():
 
     test_number = config['phone_number']
 
-    text_viber = 'It is test for viber!'
-    text_sms = 'It is test for sms!'
+    text_viber = 'Тестовое сообщение от redsms.ru'
+    text_sms = 'Тестовое сообщение от redsms.ru'
     dispatch_name = 'It is a test dispatch api'
 
     body = {
