@@ -2,7 +2,6 @@
 # encoding: utf-8
 
 import json
-import time
 import sys
 
 import requests
@@ -27,40 +26,19 @@ def main():
     errors = body.get('errors', [])
     if errors:
         print(json.dumps(errors, ensure_ascii=False), file=sys.stderr)
-    pending = set()
-    for item in body.get('items', []):
+    items = body.get('items', [])
+    if not items:
+        raise SystemExit('Сервер не принял ни одного сообщения')
+    for item in items:
         if not item.get('uuid'):
-            raise SystemExit('Missing message UUID')
-        print(f"{item['to']}: {item['uuid']}")
-        pending.add(item['uuid'])
-    if not pending:
-        raise SystemExit('No accepted messages')
-
-    failed = bool(errors)
-    for attempt in range(2):
-        if not pending:
-            break
-        if attempt:
-            time.sleep(10)
-        for uuid in sorted(pending):
-            response = api.get(f'message/{uuid}', data={'fields': 'uuid,status,errCode'})
-            item = result(response).get('item', {})
-            status = item.get('status')
-            if not status:
-                raise SystemExit(f'{uuid}: missing status')
-            print(f"{uuid}: {status}, errCode={item.get('errCode')}")
-            if status not in ('created', 'moderation', 'progress'):
-                pending.remove(uuid)
-                if status != 'delivered':
-                    failed = True
-    if pending:
-        print('Check these UUIDs again later:', ', '.join(sorted(pending)))
-    if failed:
+            raise SystemExit('В ответе отсутствует UUID сообщения')
+        print(f"{item.get('to', test_number)}: {item['uuid']}")
+    if errors:
         raise SystemExit(1)
 
 
 if __name__ == '__main__':
     try:
         main()
-    except requests.RequestException as err:
-        raise SystemExit(str(err))
+    except requests.RequestException as error:
+        raise SystemExit(str(error))
