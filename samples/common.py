@@ -6,10 +6,13 @@ from redsms import API
 HERE = Path(__file__).resolve().parent
 
 
-def settings():
+def settings(*required):
     with (HERE / 'config.json').open(encoding='utf-8') as stream:
         config = json.load(stream)
-    return config, API(config['login'], config['api_key'], config['phone_number'], config['default_sender'])
+    for field in ('login', 'api_key', *required):
+        if not isinstance(config.get(field), str) or not config[field].strip():
+            raise SystemExit(f'Заполните {field} в samples/config.json')
+    return config, API(config['login'], config['api_key'])
 
 
 def result(response):
