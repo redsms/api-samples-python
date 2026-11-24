@@ -7,7 +7,7 @@ from common import result, settings
 
 def main():
 
-    config, api = settings()
+    config, api = settings('phone_number', 'default_sender')
 
     body = {
         'route': 'sms',

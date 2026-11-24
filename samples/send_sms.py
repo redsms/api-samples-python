@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import json
+import re
 import sys
 
 import requests
@@ -10,8 +11,10 @@ from common import result, settings
 
 def main():
 
-    config, api = settings()
+    config, api = settings('phone_number', 'default_sender')
     test_number = config['phone_number']
+    if not re.fullmatch(r'[+]?[1-9][0-9]{1,14}', test_number):
+        raise SystemExit('Укажите один номер в международном формате, например +12025550123.')
 
     body = {
         'text': 'Тестовое сообщение от redsms.ru',

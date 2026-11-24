@@ -24,6 +24,7 @@ class API(object):
     """
 
     SMS_TYPE = 'sms'
+    # Deprecated: Viber routes are no longer available.
     VIBER_TYPE = 'viber'
     RESEND_TYPE = 'viber,sms'
     VALIDITY_PERIOD_MIN = 60
@@ -31,7 +32,7 @@ class API(object):
 
     API_URL = 'https://cp.redsms.ru/api/'
 
-    def __init__(self, login, api_key, phone_number, default_sender):
+    def __init__(self, login, api_key, phone_number=None, default_sender=None):
         self._login = login
         self._api_key = api_key
         self._phone_number = phone_number
@@ -79,5 +80,5 @@ class API(object):
         })
 
         if method == self.session.get:
-            return method(_url, headers=params, params=string_params, timeout=30)
-        return method(_url, headers=params, data=string_params, files=files, timeout=30)
+            return method(_url, headers=params, params=string_params, timeout=30, allow_redirects=False)
+        return method(_url, headers=params, data=string_params, files=files, timeout=30, allow_redirects=False)
